@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+    api-service:
+        build:
+            context: ./
+        container_name: apiservice
+        hostname: apiservice
+        ports:
+            - "9090:9090" # out side exposed port: inside main ts port
+        networks:
+            - api-service-net
+
+    nginx:
+        build:
+          context: ./nginx
+        container_name: nginx
+        hostname: nginx
+        ports:
+            - "80:80" 
+        depends_on:
+            - api-service
+        networks:
+            - api-service-net
+
+    redis:
+        image: redis:latest
+        container_name: redis-server
+        command: ["redis-server", "--bind", "redis", "--port", "5003"]
+        ports:
+            - 5003:6379 # out side exposed port: default port
+        networks:
+            - api-service-net
+networks:
+    api-service-net:
+        external: true
+
