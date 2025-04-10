@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { async } from "rxjs";
 import { UserEntity } from "../orders/models/user.entity";
+import { CustomerEntity, OrderEntity, OrderItemEntity } from "src/orders/models/order.entity";
 
 export default class  TypeOrmConfig {
     static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
@@ -16,7 +16,9 @@ export default class  TypeOrmConfig {
             synchronize: true,
             entities: [
                 __dirname+ '/**/*.entity.{js,ts}',
-                UserEntity
+                OrderEntity,
+                CustomerEntity,
+                OrderItemEntity
             ]
         };
     }

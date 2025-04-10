@@ -1,31 +1,85 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
+export class CustomerEntity {
+
+    @PrimaryGeneratedColumn()
+    Id!: number;
+
+    @Column()
+    Name!: string;
+
+    @Column({ unique: true })
+    Email!: string;
+
+    @Column({ nullable: true })
+    Phone?: string;
+
+    @Column({ nullable: true })
+    Address?: string;
+
+    @OneToMany(() => OrderEntity, order => order.Customer)
+    Orders!: OrderEntity[];
+}
 
 @Entity()
 export class OrderEntity {
 
     @PrimaryGeneratedColumn()
-    id!: number;
+    Id!: number;
 
     @Column()
-    name!: string;
+    OrderNumber!: string;
 
-    @Column({unique: true})
-    email!: string;
+    @Column({ type: 'timestamp' })
+    OrderDate!: Date;
 
-    @Column({select: false})
-    password!: string;
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    TotalAmount!: number;
 
-    @Column({select: false})
-    permissionId!: number;
+    @Column({ type: 'enum', enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'], default: 'Pending' })
+    Status!: string;
 
-    @Column({select: false})
-    phonenumber!: number;
+    @Column({ type: 'enum', enum: ['CreditCard', 'PayPal', 'CashOnDelivery', 'BankTransfer'], default: 'CreditCard' })
+    PaymentMethod!: string;
 
-    @Column({select: false})
-    image!: number;
+    @Column({ type: 'boolean', default: false })
+    IsPaid!: boolean;
 
-    @BeforeInsert()
-    emailToLowerCase() {
-        this.email = this.email.toLowerCase();
-    }
+    @Column({ type: 'timestamp', nullable: true })
+    PaidAt!: Date;
+
+    @Column({ type: 'text', nullable: true })
+    ShippingAddress?: string;
+
+    @Column({ type: 'text', nullable: true })
+    BillingAddress?: string;
+
+    @Column({ type: 'text', nullable: true })
+    Notes!: string;
+
+    @OneToMany(() => OrderItemEntity, item => item.Order)
+    Items!: OrderItemEntity[];
+
+    @ManyToOne(() => CustomerEntity, customer => customer.Orders)
+    Customer!: CustomerEntity;
+}
+
+@Entity()
+export class OrderItemEntity {
+
+    @PrimaryGeneratedColumn()
+    Id!: number;
+
+    @Column()
+    ProductId!: number;
+
+    @Column()
+    Quantity!: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    UnitPrice!: number;
+
+    @ManyToOne(() => OrderEntity, order => order.Items, { onDelete: 'CASCADE' })
+    Order!: OrderEntity;
 }
