@@ -27,9 +27,10 @@ export class OrdersService {
 
     async update(updatedOrderDto: UpdateOrderDto): Promise<Observable<any>> {
         const Id = updatedOrderDto.Id;
-        const category = await this.orderRepository.findOne({ where: { Id: Id } });
-        if (category) {
-            return from(this.orderRepository.upsert(updatedOrderDto, ['Id'])).pipe(
+        const order = await this.orderRepository.findOne({ where: { Id: Id } });
+        if (order) {
+            let orderDto = { ...order,...updatedOrderDto};
+            return from(this.orderRepository.upsert(orderDto, ['Id'])).pipe(
                 switchMap(() =>
                     from(this.orderRepository.findOne({ where: { Id } })).pipe(
                         map((updatedOrder) => {

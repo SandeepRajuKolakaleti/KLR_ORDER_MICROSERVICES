@@ -1,26 +1,24 @@
-import { BeforeInsert, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class CustomerEntity {
+// @Entity()
+// export class CustomerEntity {
 
-    @PrimaryGeneratedColumn()
-    Id!: number;
+//     @PrimaryGeneratedColumn()
+//     Id!: number;
 
-    @Column()
-    Name!: string;
+//     @Column()
+//     Name!: string;
 
-    @Column({ unique: true })
-    Email!: string;
+//     @Column({ unique: true })
+//     Email!: string;
 
-    @Column({ nullable: true })
-    Phone?: string;
+//     @Column({ nullable: true })
+//     Phone?: string;
 
-    @Column({ nullable: true })
-    Address?: string;
+//     @Column({ nullable: true })
+//     Address?: string;
 
-    @OneToMany(() => OrderEntity, order => order.Customer)
-    Orders!: OrderEntity[];
-}
+// }
 
 @Entity()
 export class OrderEntity {
@@ -61,8 +59,8 @@ export class OrderEntity {
     @OneToMany(() => OrderItemEntity, item => item.Order)
     Items!: OrderItemEntity[];
 
-    @ManyToOne(() => CustomerEntity, customer => customer.Orders)
-    Customer!: CustomerEntity;
+    @Column()
+    UserId!: number;
 }
 
 @Entity()

@@ -31,9 +31,9 @@ export class CreateOrderDto {
     @IsString()
     Notes!: string;
 
-    Items!: ProductItemDto[];
+    Items!: OrderItemDto[];
 
-    Customer!: CustomerDto;
+    UserId!: number;
 
 }
 
@@ -42,19 +42,17 @@ export class UpdateOrderDto extends CreateOrderDto {
     Id?: number;
 }
 
-export class ProductItemDto {
+export class OrderItemDto {
     Id!: number;
     ProductId!: number;
     Quantity!: number;
     UnitPrice!: number;
-    Order!: CreateOrderDto;
 }
 
-export class CustomerDto {
-    Id!: number;
-    Name!: string;
-    Email!: string;
-    Phone!: string;
-    Address!: string;
-    Orders!: CreateOrderDto[]
-}
+// export class CustomerDto {
+//     Id!: number;
+//     Name!: string;
+//     Email!: string;
+//     Phone!: string;
+//     Address!: string;
+// }
