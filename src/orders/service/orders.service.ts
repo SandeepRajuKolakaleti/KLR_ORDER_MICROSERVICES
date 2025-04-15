@@ -56,7 +56,8 @@ export class OrdersService {
             where: {Id},
             select: [
                 'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid'
-            ]
+            ],
+            relations: { Items: true}
         }));
     }
 
