@@ -3,9 +3,6 @@ import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
 export class CreateOrderDto {
     @IsString()
     OrderNumber!: string;
-    
-    @IsNumber()
-    CustomerId!: number;
 
     @IsString()
     OrderDate!: Date;

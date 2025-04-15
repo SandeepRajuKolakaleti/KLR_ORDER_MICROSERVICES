@@ -56,7 +56,7 @@ export class OrderEntity {
     @Column({ type: 'text', nullable: true })
     Notes!: string;
 
-    @OneToMany(() => OrderItemEntity, item => item.Order)
+    @OneToMany(() => OrderItemEntity, (product) => product.Order, { cascade: true, eager: true })
     Items!: OrderItemEntity[];
 
     @Column()

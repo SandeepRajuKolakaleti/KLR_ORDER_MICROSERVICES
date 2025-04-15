@@ -22,7 +22,11 @@ export class OrdersService {
     }
 
     getAll() {
-        return from(this.orderRepository.find());
+        return from(this.orderRepository.find({
+            // relations: { //eager: true configured at entity level 
+            //     Items: true
+            // }
+        }));
     }
 
     async update(updatedOrderDto: UpdateOrderDto): Promise<Observable<any>> {
