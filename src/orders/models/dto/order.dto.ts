@@ -1,8 +1,6 @@
 import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class CreateOrderDto {
-    @IsString()
-    OrderNumber!: string;
 
     @IsString()
     OrderDate!: Date;
@@ -12,6 +10,9 @@ export class CreateOrderDto {
 
     @IsString()
     Status!: string;
+
+    @IsNumber()
+    isActive!: number;
 
     @IsString()
     PaymentMethod!: string;

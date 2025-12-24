@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateOrderDto, UpdateOrderDto } from '../models/dto/order.dto';
 import { from, map, Observable, of, switchMap } from 'rxjs';
 import { OrderI } from '../models/order.interface';
+import { AppConstants } from '../../app.constants';
 
 @Injectable()
 export class OrdersService {
@@ -12,8 +13,12 @@ export class OrdersService {
         @InjectRepository(OrderEntity)
         private orderRepository: Repository<OrderEntity>,
     ) {}
-    create(createdOrderDto: CreateOrderDto) {
-        return from(this.orderRepository.save(createdOrderDto)).pipe(
+    async create(createdOrderDto: CreateOrderDto) {
+        const orderNumber = await this.generateOrderNumber();
+        return from(this.orderRepository.save({
+            ...createdOrderDto, 
+            OrderNumber: orderNumber
+        })).pipe(
             map((savedOrder: OrderI) => {
                 const { ...order } = savedOrder;
                 return order;
@@ -62,10 +67,24 @@ export class OrdersService {
     }
 
     async delete(Id: number) {
-        const category = await this.orderRepository.findOne({ where: { Id } });
-        if (category) {
-           await this.orderRepository.remove(category);
-           return true;
+        const order = await this.orderRepository.findOne({ where: { Id } });
+        if (!order) {
+            return false;
         }
+
+        order.isActive = AppConstants.app.status.inactive;
+        await this.orderRepository.save(order);
+
+        return true;
+    }
+
+    private async generateOrderNumber(): Promise<string> {
+        const count = await this.orderRepository.count();
+
+        const nextNumber = count + 1;
+
+        const year = new Date().getFullYear();
+
+        return `ORD-${year}-${String(nextNumber).padStart(6, '0')}`;
     }
 }

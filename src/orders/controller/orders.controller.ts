@@ -11,7 +11,7 @@ export class OrdersController {
     constructor(private orderService: OrdersService) {}
     @UseGuards(JwtAuthGuard)
     @Post("create-order")
-    createCategory(@Body() createdOrderDto: CreateOrderDto): Observable<OrderI> {
+    async createCategory(@Body() createdOrderDto: CreateOrderDto): Promise<Observable<OrderI>> {
         return this.orderService.create(createdOrderDto);
         // test app constants - AppConstants.app.xyz
     }

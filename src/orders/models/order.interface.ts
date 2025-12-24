@@ -4,6 +4,7 @@ export interface OrderI {
     OrderDate: Date;
     TotalAmount: number;
     Status: string;
+    isActive:number;
     PaymentMethod: string;
     IsPaid: boolean;
     PaidAt: Date;

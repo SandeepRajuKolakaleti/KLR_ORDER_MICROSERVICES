@@ -8,6 +8,22 @@ export class AppConstants {
             expiryTime: 3600,
             type: 'JWT' 
         },
+        bucket: 'klruploads',
+        key: 'uploads',
+        S3: {
+            user: 'user-profile-images',
+            product: 'product-images'
+        },
+        userType: {
+            admin: 'Admin',
+            user: 'User',
+            vendor: 'Vendor',
+            deliveryBoy: 'DeliveryBoy'
+        },
+        status: {
+            active: 1,
+            inactive: 0
+        }
     };
 
 }

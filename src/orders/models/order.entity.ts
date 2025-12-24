@@ -26,7 +26,7 @@ export class OrderEntity {
     @PrimaryGeneratedColumn()
     Id!: number;
 
-    @Column()
+    @Column({ unique: true })
     OrderNumber!: string;
 
     @Column({ type: 'timestamp' })
@@ -34,6 +34,13 @@ export class OrderEntity {
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     TotalAmount!: number;
+
+    @Column({
+        type: "tinyint",
+        width: 1,
+        default: 1,  // active by default
+    })
+    isActive!: number;
 
     @Column({ type: 'enum', enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'], default: 'Pending' })
     Status!: string;

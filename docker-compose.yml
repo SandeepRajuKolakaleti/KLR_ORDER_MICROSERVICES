@@ -6,7 +6,7 @@ services:
         container_name: apiservice
         hostname: apiservice
         ports:
-            - "9090:9090" # out side exposed port: inside main ts port
+            - "3004:3004" # out side exposed port: inside main ts port
         networks:
             - api-service-net
 
