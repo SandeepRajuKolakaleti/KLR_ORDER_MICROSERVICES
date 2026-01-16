@@ -45,7 +45,10 @@ export class OrderEntity {
     @Column({ type: 'enum', enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'], default: 'Pending' })
     Status!: string;
 
-    @Column({ type: 'enum', enum: ['CreditCard', 'PayPal', 'CashOnDelivery', 'BankTransfer'], default: 'CreditCard' })
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    TransactionId?: string;
+
+    @Column({ type: 'enum', enum: ['RazorPay', 'PayPal', 'CashOnDelivery', 'BankTransfer'], default: 'RazorPay' })
     PaymentMethod!: string;
 
     @Column({ type: 'boolean', default: false })
@@ -62,6 +65,12 @@ export class OrderEntity {
 
     @Column({ type: 'text', nullable: true })
     Notes!: string;
+
+    @Column({ type: 'text', nullable: true })
+    PhoneNumber?: string;
+
+    @Column({ type: 'text', nullable: true })
+    Email?: string;
 
     @OneToMany(() => OrderItemEntity, (product) => product.Order, { cascade: true, eager: true })
     Items!: OrderItemEntity[];
