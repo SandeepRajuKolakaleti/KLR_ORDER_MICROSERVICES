@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderEntity } from '../models/order.entity';
 import { Repository } from 'typeorm';
@@ -6,15 +6,24 @@ import { CreateOrderDto, UpdateOrderDto } from '../models/dto/order.dto';
 import { from, map, Observable, of, switchMap } from 'rxjs';
 import { OrderI } from '../models/order.interface';
 import { AppConstants } from '../../app.constants';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class OrdersService {
     constructor(
         @InjectRepository(OrderEntity)
         private orderRepository: Repository<OrderEntity>,
+        @Inject('RABBITMQ_SERVICE')
+        private readonly client: ClientProxy
     ) {}
     async create(createdOrderDto: CreateOrderDto) {
         const orderNumber = await this.generateOrderNumber();
+        this.client.emit('ORDER_CREATED', {
+            orderId: orderNumber,
+            amount: createdOrderDto.TotalAmount,
+            ...createdOrderDto
+        });
+
         return from(this.orderRepository.save({
             ...createdOrderDto, 
             OrderNumber: orderNumber
