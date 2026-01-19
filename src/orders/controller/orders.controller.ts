@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { OrdersService } from '../service/orders.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateOrderDto, UpdateOrderDto } from '../models/dto/order.dto';
@@ -18,8 +18,13 @@ export class OrdersController {
 
     @UseGuards(JwtAuthGuard)
     @Get("getAll")
-    async getAllOrders() {
-        return this.orderService.getAll();
+    async getAllOrders( @Req() request: Request, 
+            @Query("offset", new ParseIntPipe({ optional: true })) offset = 0,
+            @Query("limit", new ParseIntPipe({ optional: true })) limit = 10,) {
+        return this.orderService.getAll({
+            offset: Number(offset),
+            limit: Number(limit)
+        });
     }
 
     @UseGuards(JwtAuthGuard)

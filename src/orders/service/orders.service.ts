@@ -7,6 +7,7 @@ import { from, map, Observable, of, switchMap } from 'rxjs';
 import { OrderI } from '../models/order.interface';
 import { AppConstants } from '../../app.constants';
 import { ClientProxy } from '@nestjs/microservices';
+import { PaginatedResult, Pagination } from '../models/pagination.interface';
 
 @Injectable()
 export class OrdersService {
@@ -35,12 +36,21 @@ export class OrdersService {
         )
     }
 
-    getAll() {
-        return from(this.orderRepository.find({
-            // relations: { //eager: true configured at entity level 
-            //     Items: true
-            // }
-        }));
+    getAll(pagination: Pagination): Observable<PaginatedResult<OrderI>> {
+        return from(this.orderRepository.findAndCount({
+            select: [
+                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId'
+            ],
+            skip: pagination.offset,
+            take: pagination.limit,
+            order: { OrderDate: "DESC" }
+        })).pipe(
+        map(([orders, total]) => ({
+            total: total,
+            offset: pagination.offset,
+            limit: pagination.limit,
+            data: orders
+        })));
     }
 
     async update(updatedOrderDto: UpdateOrderDto): Promise<Observable<any>> {
