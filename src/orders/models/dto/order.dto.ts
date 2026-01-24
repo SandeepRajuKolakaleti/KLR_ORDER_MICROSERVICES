@@ -40,6 +40,7 @@ export class CreateOrderDto {
     Items!: OrderItemDto[];
 
     UserId!: number;
+    UserName?: string;
 
 }
 

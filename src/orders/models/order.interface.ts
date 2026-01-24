@@ -13,6 +13,7 @@ export interface OrderI {
     Notes: string;
     Items: OrderItemEntity[];
     UserId: number;
+    userName?: string;
 }
 
 export interface OrderItemEntity {

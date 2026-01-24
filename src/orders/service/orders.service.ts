@@ -39,11 +39,11 @@ export class OrdersService {
     getAll(pagination: Pagination): Observable<PaginatedResult<OrderI>> {
         return from(this.orderRepository.findAndCount({
             select: [
-                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId'
+                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress', 'TotalAmount',
+                'Items', 'UserId', 'UserName'
             ],
             skip: pagination.offset,
-            take: pagination.limit,
-            order: { OrderDate: "DESC" }
+            take: pagination.limit
         })).pipe(
         map(([orders, total]) => ({
             total: total,
@@ -79,7 +79,8 @@ export class OrdersService {
         return from(this.orderRepository.findOne({
             where: {Id},
             select: [
-                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid'
+                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress', 'TotalAmount',
+                'Items', 'UserId'
             ],
             relations: { Items: true}
         }));

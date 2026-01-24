@@ -77,6 +77,9 @@ export class OrderEntity {
 
     @Column()
     UserId!: number;
+
+    @Column()
+    UserName!: string;
 }
 
 @Entity()
