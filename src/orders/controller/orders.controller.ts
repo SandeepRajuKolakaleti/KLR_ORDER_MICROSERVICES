@@ -62,4 +62,18 @@ export class OrdersController {
     async deleteOrder(@Param('id') id: number): Promise<any> {
         return this.orderService.delete(id);
     }
+
+    @Get('vendor/:vendorId')
+    getVendorOrders(
+    @Param('vendorId') vendorId: string,
+    @Query('offset') offset?: number,
+    @Query('limit') limit?: number,
+    ) {
+        return this.orderService.getOrdersByVendorId(
+            vendorId,
+            offset,
+            limit,
+        );
+    }
+
 }

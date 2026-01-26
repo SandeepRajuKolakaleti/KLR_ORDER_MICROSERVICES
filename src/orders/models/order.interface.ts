@@ -21,6 +21,7 @@ export interface OrderItemEntity {
     ProductId: number;
     Quantity: number;
     UnitPrice: number;
+    VendorId?: string;
 }
 
 // export interface CustomerEntity {

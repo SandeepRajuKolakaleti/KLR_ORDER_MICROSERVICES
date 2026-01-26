@@ -42,6 +42,8 @@ export class CreateOrderDto {
     UserId!: number;
     UserName?: string;
 
+    DeliveryManId?: number;
+
 }
 
 export class UpdateOrderDto extends CreateOrderDto {
@@ -57,6 +59,7 @@ export class OrderItemDto {
     ProductId!: number;
     Quantity!: number;
     UnitPrice!: number;
+    VendorId?: string;
 }
 
 // export class CustomerDto {

@@ -39,8 +39,8 @@ export class OrdersService {
     getAll(pagination: Pagination): Observable<PaginatedResult<OrderI>> {
         return from(this.orderRepository.findAndCount({
             select: [
-                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress', 'TotalAmount',
-                'Items', 'UserId', 'UserName'
+                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress',
+                'Items', 'UserId', 'UserName', 'isActive', 'BillingAddress', 'Notes', 'PhoneNumber', 'Email'
             ],
             skip: pagination.offset,
             take: pagination.limit
@@ -79,12 +79,41 @@ export class OrdersService {
         return from(this.orderRepository.findOne({
             where: {Id},
             select: [
-                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress', 'TotalAmount',
-                'Items', 'UserId'
+                'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress',
+                'Items', 'UserId', 'UserName', 'isActive', 'BillingAddress', 'Notes', 'PhoneNumber', 'Email', 'DeliveryManId'
             ],
             relations: { Items: true}
         }));
     }
+
+    async getOrdersByVendorId(
+        vendorId: string,
+        offset?: number,
+        limit?: number,
+    ): Promise<PaginatedResult<OrderI>> {
+
+        const qb = this.orderRepository
+            .createQueryBuilder('order')
+            .distinct(true)
+            .innerJoinAndSelect('order.Items', 'item')
+            .where('item.VendorId = :vendorId', { vendorId })
+            .orderBy('order.OrderDate', 'DESC');
+
+
+        if (offset !== undefined && limit !== undefined) {
+            qb.skip(offset).take(limit);
+        }
+
+        const [data, total] = await qb.getManyAndCount();
+
+        return {
+            total,
+            offset,
+            limit,
+            data,
+        };
+    }
+
 
     async delete(Id: number) {
         const order = await this.orderRepository.findOne({ where: { Id } });

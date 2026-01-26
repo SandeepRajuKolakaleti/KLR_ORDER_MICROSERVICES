@@ -80,6 +80,9 @@ export class OrderEntity {
 
     @Column()
     UserName!: string;
+
+    @Column({ nullable: true })
+    DeliveryManId?: number;
 }
 
 @Entity()
@@ -96,6 +99,9 @@ export class OrderItemEntity {
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     UnitPrice!: number;
+
+    @Column({ type: 'text', nullable: true })
+    VendorId!: string;
 
     @ManyToOne(() => OrderEntity, order => order.Items, { onDelete: 'CASCADE' })
     Order!: OrderEntity;
