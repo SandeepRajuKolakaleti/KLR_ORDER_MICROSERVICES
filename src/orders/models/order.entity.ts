@@ -82,7 +82,7 @@ export class OrderEntity {
     UserName!: string;
 
     @Column({ nullable: true })
-    DeliveryManId?: number;
+    DeliveryBoyId?: number;
 }
 
 @Entity()

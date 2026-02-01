@@ -76,4 +76,17 @@ export class OrdersController {
         );
     }
 
+    @Get('delivery-boy/:deliveryBoyId')
+    getDeliveryManOrders(
+    @Param('deliveryBoyId') deliveryBoyId: string,
+    @Query('offset') offset?: number,
+    @Query('limit') limit?: number,
+    ) {
+        return this.orderService.getOrdersByDeliveryBoyId(
+            deliveryBoyId,
+            offset,
+            limit,
+        );
+    }
+
 }

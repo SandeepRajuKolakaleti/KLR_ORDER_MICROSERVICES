@@ -80,7 +80,7 @@ export class OrdersService {
             where: {Id},
             select: [
                 'Id', 'OrderNumber', 'Status', 'OrderDate', 'TotalAmount', 'IsPaid', 'TransactionId', 'PaidAt', 'PaymentMethod', 'ShippingAddress',
-                'Items', 'UserId', 'UserName', 'isActive', 'BillingAddress', 'Notes', 'PhoneNumber', 'Email', 'DeliveryManId'
+                'Items', 'UserId', 'UserName', 'isActive', 'BillingAddress', 'Notes', 'PhoneNumber', 'Email', 'DeliveryBoyId'
             ],
             relations: { Items: true}
         }));
@@ -97,6 +97,32 @@ export class OrdersService {
             .distinct(true)
             .innerJoinAndSelect('order.Items', 'item')
             .where('item.VendorId = :vendorId', { vendorId })
+            .orderBy('order.OrderDate', 'DESC');
+
+
+        if (offset !== undefined && limit !== undefined) {
+            qb.skip(offset).take(limit);
+        }
+
+        const [data, total] = await qb.getManyAndCount();
+
+        return {
+            total,
+            offset,
+            limit,
+            data,
+        };
+    }
+
+    async getOrdersByDeliveryBoyId(
+        deliveryBoyId: string,
+        offset?: number,
+        limit?: number,
+    ): Promise<PaginatedResult<OrderI>> {
+
+        const qb = this.orderRepository
+            .createQueryBuilder('order')
+            .where('DeliveryBoyId = :deliveryBoyId', { deliveryBoyId })
             .orderBy('order.OrderDate', 'DESC');
 
 

@@ -42,7 +42,7 @@ export class CreateOrderDto {
     UserId!: number;
     UserName?: string;
 
-    DeliveryManId?: number;
+    DeliveryBoyId?: number;
 
 }
 
